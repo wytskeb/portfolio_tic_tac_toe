@@ -7,14 +7,14 @@ aantal_o = 0
 board = [[" " for _ in range(n)] for _ in range(n)]
 
 def print_board(board):
-    print("^  -", end="")
+    print("X  -", end="")
     print("-" * 2 * n)
     for row in board:
         print("|  |", end="")
         print("|".join(row) + "|")
         print("|  -", end="")
         print("-" * 2 * n)
-    print ("Y/X--------->")
+    print ("v/Y--------->")
 
 def create_new_board(size):
     return [[" " for _ in range(size)] for _ in range(size)]
