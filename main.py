@@ -1,56 +1,19 @@
 from random import randint
 
-import HumanPlayer
-import RandomPlayer
+import Board
 
-size_game = randint(3, 6)
+import HumanPlayer
+#import RandomPlayer
+import MinMaxPlayer
+
+SIZE_GAME_MIN = 3
+SIZE_GAME_MAX = 3
+size_game = randint(SIZE_GAME_MIN, SIZE_GAME_MAX )
 
 aantal_x = 0
 aantal_o = 0
 winning_human = 0
 winning_computer = 0
-
-board = [[" " for _ in range(size_game)] for _ in range(size_game)]
-
-def print_board(board):
-    print("X  -", end="")
-    print("-" * 2 * size_game)
-    for row in board:
-        print("|  |", end="")
-        print("|".join(row) + "|")
-        print("|  -", end="")
-        print("-" * 2 * size_game)
-    print ("v/Y--------->")
-
-def create_new_board(size):
-    return [[" " for _ in range(size)] for _ in range(size)]
-
-
-def check_winner(board):
-    for i in range(size_game):
-        if board[i][0] != " " and all(board[i][j] == board[i][0] for j in range(size_game)):
-            return board[i][0]
-        if board[0][i] != " " and all(board[j][i] == board[0][i] for j in range(size_game)):
-            return board[0][i]
-    if board[0][0] != " " and all(board[i][i] == board[0][0] for i in range(size_game)):
-        return board[0][0]
-    if board[0][size_game-1] != " " and all(board[i][size_game-1-i] == board[0][size_game-1] for i in range(size_game)):
-        return board[0][size_game-1]
-    return None
-
-def check_draw(board):
-    for row in board:
-        if " " in row:
-            return False
-    return True
-
-def check_possible_moves(board):
-    possible_moves = []
-    for i in range(size_game):
-        for j in range(size_game):
-            if board[i][j] == " ":
-                possible_moves.append((i+1, j+1))
-    return possible_moves
 
 def play_game(player_x, player_o):
     move = 0
@@ -64,7 +27,7 @@ def play_game(player_x, player_o):
             sine = "O"
 
         print (f"Move: {move+1}")
-        x, y = player.get_move(size_game, check_possible_moves(board))
+        x, y = player.get_move(board)
 
         if x == None or y == None:
             print("Onjuist antwoord, probeer opnieuw!")
@@ -73,14 +36,14 @@ def play_game(player_x, player_o):
         print(x)
         print(y)
 
-        board[x-1][y-1] = sine
+        board.make_move((x, y), sine)
 
-        print_board(board)
+        board.print_board()
 
-        if check_winner(board) == sine:
+        if board.check_winner() == sine:
             print("Speler 1 heeft gewonnen!")
             return sine
-        if check_draw(board):
+        if board.check_draw():
             print("Gelijkspel!")
             return None
         
@@ -88,7 +51,9 @@ def play_game(player_x, player_o):
         
 while True:
     print(f"Het spel begint! We spelen op een {size_game} X {size_game} bord. Wie het eerst {size_game} op rij heeft!")
-    print_board(board)
+
+    board = Board.Board(size_game)
+    board.print_board()
 
     print("Speler 1 is X, speler 2 is O")
     
@@ -96,10 +61,10 @@ while True:
     if tos == 0:
         print("Speler 1 is Mens")
         player1 = HumanPlayer.HumanPlayer("X")
-        player2 = RandomPlayer.RandomPlayer("O")
+        player2 = MinMaxPlayer.MinMaxPlayer("O")
     else:
-        print("Speler 1 is Computer")
-        player1 = RandomPlayer.RandomPlayer("X")
+        print("Speler 1 is  Computer MinMax")
+        player1 = MinMaxPlayer.MinMaxPlayer("X")
         player2 = HumanPlayer.HumanPlayer("O")
 
     gewonnen = play_game(player1, player2)
@@ -120,11 +85,10 @@ while True:
 
     nog_een_keer = input (f"Het staat X/O: ({aantal_x} / {aantal_o}). \nmens ({winning_human} / computer {winning_computer}). Nog een keer? (j/n) ")
     
-    size_game = randint(3, 6)
-    boaerd = [[" " for _ in range(size_game)] for _ in range(size_game)]
+    size_game = randint(SIZE_GAME_MIN, SIZE_GAME_MAX )
 
     if (nog_een_keer == "j"):
-        board = create_new_board(size_game)
+        board = Board.Board(size_game)
     else:
         break
     

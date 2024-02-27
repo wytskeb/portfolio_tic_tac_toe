@@ -2,9 +2,9 @@ class HumanPlayer:
     def __init__(self, symbol):
         self.symbol = symbol
         
-    def get_move(self, n, possible_moves):
-    
-        print(f"Mogelijke zetten: {possible_moves}")
+    def get_move(self, board):
+        n = board.size_game
+        print(f"Mogelijke zetten: {board.check_possible_moves()}")
         player_input = input("Geef een positie: ").split(',')
         if len(player_input) != 2:
             print("Ongeldige positie")
@@ -18,7 +18,7 @@ class HumanPlayer:
                 return None, None
             else:
 
-                if 0 < x <= n and 0 < y <= n and (x, y) in possible_moves:
+                if 0 < x <= n and 0 < y <= n and (x, y) in board.check_possible_moves():
                     return (x, y)
                 
                 print("Positie is niet beschikbaar")
