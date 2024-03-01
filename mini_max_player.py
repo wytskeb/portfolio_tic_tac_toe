@@ -22,15 +22,15 @@ class MinMaxPlayer:
                 cloned_board.make_move(move, self.symbol)
                 eval_score = self.minimax(cloned_board, depth - 1, False)
                 best_eval = max(best_eval, eval_score)
-            return best_eval
-        best_eval = float('inf')
-        for move in board.check_possible_moves():
-            print(f"move: {move} symbol: {self.symbol}")
-            print(f"depth: {depth} is_maximizing: {is_maximizing}")
-            cloned_board = copy.deepcopy(board)
-            cloned_board.make_move(move, 'X' if self.symbol == 'O' else 'O')
-            eval_score = self.minimax(cloned_board, depth - 1, True)
-            best_eval = min(best_eval, eval_score)
+        else:
+            best_eval = float('inf')
+            for move in board.check_possible_moves():
+                print(f"move: {move} symbol: {self.symbol}")
+                print(f"depth: {depth} is_maximizing: {is_maximizing}")
+                cloned_board = copy.deepcopy(board)
+                cloned_board.make_move(move, 'X' if self.symbol == 'O' else 'O')
+                eval_score = self.minimax(cloned_board, depth - 1, True)
+                best_eval = min(best_eval, eval_score)
         return best_eval
 
     def evaluate_board(self, board):
